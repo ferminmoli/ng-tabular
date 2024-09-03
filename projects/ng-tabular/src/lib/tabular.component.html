@@ -1,0 +1,25 @@
+<!-- Table container -->
+<div class="overflow-x-auto">
+  <!-- Table element -->
+  <table class="min-w-full divide-y divide-gray-200 bg-white border border-gray-300">
+    <!-- Table head -->
+    <thead class="bg-gray-50">
+      <tr>
+        <!-- Column headers -->
+        <th *ngFor="let column of columns; let i = index" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          {{ column.field }}
+        </th>
+      </tr>
+    </thead>
+    <!-- Table body -->
+    <tbody class="bg-white divide-y divide-gray-200">
+      <!-- Iterate through rows (assuming row data will be passed) -->
+      <tr *ngFor="let row of rows">
+        <!-- Iterate through columns to display data -->
+        <td *ngFor="let column of columns" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {{ row[column.field] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
