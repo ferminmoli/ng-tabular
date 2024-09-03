@@ -20,13 +20,14 @@ export class AppComponent implements OnInit {
     this.columns = [
       { field: 'name' },
       { field: 'last' },
-      { field: 'nick' }
+      { field: 'nick' },
+      { field: 'age' } 
     ];
 
     this.rows = [
-      { name: 'Fermin', last: "Moli", nick: "Ferr" },
-      { name: 'Fermin', last: "Moli", nick: "Ferr" },
-      { name: 'Fermin', last: "Moli", nick: "Ferr" }
+      { name: 'Fermin', last: "oli", nick: "Ferr", age: "1" },
+      { name: 'Fermin', last: "Moli", nick: "Ferr", age: "13" },
+      { name: 'Fermin', last: "Moli", nick: "Ferr", age: "31" },
     ];
   }
 }
