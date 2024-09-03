@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgTabularComponent } from '../../projects/ng-tabular/src/public-api';
 import { Column } from '../../projects/ng-tabular/src/lib/models/column.model'; // Adjust the path as needed
+import { MockData } from './data';
 
 @Component({
   selector: 'app-root',
@@ -19,15 +20,12 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.columns = [
       { field: 'name' },
-      { field: 'last' },
-      { field: 'nick' },
-      { field: 'age' } 
+      { field: 'last_name' },
+      { field: 'email' },
+      { field: 'dob' } 
     ];
 
-    this.rows = [
-      { name: 'Fermin', last: "oli", nick: "Ferr", age: "1" },
-      { name: 'Fermin', last: "Moli", nick: "Ferr", age: "13" },
-      { name: 'Fermin', last: "Moli", nick: "Ferr", age: "31" },
-    ];
+    
+    this.rows = new MockData().get();
   }
 }
