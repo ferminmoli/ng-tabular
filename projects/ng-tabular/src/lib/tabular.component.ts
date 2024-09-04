@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs/internal/Subject';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import { Config } from './models/config.model';
 
 @Component({
   selector: 'ng-tabular',
@@ -12,55 +13,72 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
   templateUrl: './tabular.component.html',
   styles: ``
 })
-export class NgTabularComponent implements OnChanges {
+export class NgTabularComponent implements OnInit, OnChanges {
   @Input() columns: Column[] = [];
   @Input() rows: any[] = [];
-  @Input() itemsPerPage: number = 10;
-  searchTerm: string = '';
-  sortColumn: string = '';
+  @Input() config: Config = {};
+
+  globalSearchTerm: string = "";
+  searchTerms: { [key: string]: string } = {};
+
+  sortColumn: string = "";
   sortDirection: 'asc' | 'desc' = 'asc';
   filteredRows: any[] = [];
   currentPage: number = 1;
   totalPages: number = 1;
+  pageSize: number = 10;
 
   private searchSubject = new Subject<string>();
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit() {
+    if (this.config.enablePagination) {
+      this.pageSize = this.config.defaultPageSize || 10;
+    }
+
+    this.columns.forEach(column => {
+      this.searchTerms[column.field] = '';
+    });
+
     this.searchSubject.pipe(
       debounceTime(300)
     ).subscribe(value => {
-      this.searchTerm = value;
-      this.reload();
+      this.globalSearchTerm = value;
+      this.applyFilters();
     });
+
+    this.loadData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges triggered:', changes);
-    if (changes['rows'] || changes['columns']) {
-      this.reload();
-    }
+    // if (changes['rows'] || changes['columns']) {
+    //   this.loadData();
+    // }
   }
 
   onSearchChange(searchValue: string) {
-    this.searchSubject.next(searchValue);
+    this.searchSubject.next(searchValue);  
   }
 
-  reload() {
-    if (!this.searchTerm && this.searchTerm !== "") {
+  loadData() {
+    if (this.globalSearchTerm.trim() === "") {
       this.filteredRows = this.rows;
     } else {
       this.filteredRows = this.rows.filter(row =>
         this.columns.some(column =>
-          row[column.field]?.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
+          row[column.field]?.toString().toLowerCase().includes(this.globalSearchTerm.toLowerCase())
         )
       );
     }
     this.sortRows();
-    this.totalPages = Math.ceil(this.filteredRows.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.filteredRows.length / this.pageSize);
     this.currentPage = 1;
   }
 
   sort(field: string) {
+    if (!this.config.enableSorting) return;
+
     this.sortDirection = this.sortColumn === field && this.sortDirection === 'asc' ? 'desc' : 'asc';
     this.sortColumn = field;
     this.sortRows();
@@ -76,6 +94,42 @@ export class NgTabularComponent implements OnChanges {
     }
   }
 
+  onColumnSearchChange(columnField: string, searchValue: string): void {
+    this.searchTerms[columnField] = searchValue;
+    this.applyFilters();
+  }
+
+  applyFilters(){
+
+    this.filteredRows = this.rows.filter(row => {
+      // Búsqueda global
+      const globalMatch = Object.values(row).some(value =>
+        value
+          ?.toString()
+          .toLowerCase()
+          .includes(this.globalSearchTerm.toLowerCase())
+      );
+
+      // Búsqueda específica por columna
+      const columnMatch = this.columns.every(column =>
+        row[column.field]
+          ?.toString()
+          .toLowerCase()
+          .includes(this.searchTerms[column.field].toLowerCase())
+      );
+
+      // Filtrar si coincide con la búsqueda global o con todas las búsquedas por columna
+      return globalMatch && columnMatch;
+    });
+  }
+
+  formatData(value: any): any {
+    if (typeof(value) === 'boolean') {
+      return value ? '✔️' : '❌'; // Format boolean
+    }
+    return value; // For 'string' and 'number', return as is
+  }
+
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -88,9 +142,16 @@ export class NgTabularComponent implements OnChanges {
     }
   }
 
+  goToPage(page: number){
+    this.currentPage = page;
+  }
+  
   get paginatedRows() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
+    if(!this.config.enablePagination){
+      return this.filteredRows;
+    }
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
     return this.filteredRows.slice(startIndex, endIndex);
   }
 }

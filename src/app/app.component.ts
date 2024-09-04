@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgTabularComponent } from '../../projects/ng-tabular/src/public-api';
-import { Column } from '../../projects/ng-tabular/src/lib/models/column.model'; // Adjust the path as needed
+import { Column, Config, NgTabularComponent } from '../../projects/ng-tabular/src/public-api';
 import { MockData } from './data';
 
 @Component({
@@ -17,12 +16,22 @@ export class AppComponent implements OnInit {
   columns: Column[] = [];
   rows: any[] = [];
 
+  tableConfig: Config = {
+    enableSorting: true,
+    enableFiltering: true,
+    enableSearchBox: true,
+    enablePagination: true,
+    pageSizeOptions: [10, 20, 50],
+    defaultPageSize: 3
+  };
+
   ngOnInit() {
     this.columns = [
-      { field: 'name' },
-      { field: 'last_name' },
-      { field: 'email' },
-      { field: 'dob' } 
+      { field: "first_name", headerName: "Nombre" },
+      { field: "last_name", headerName: "Apellido" },
+      { field: "email", headerName: "Email" },
+      { field: "dob", headerName: "Fecha de Nacimiento"},
+      { field: "available", headerName: "¿Disponible?", dataType: "boolean"} 
     ];
 
     

@@ -3,3 +3,4 @@
  */
 export * from './lib/tabular.component';
 export * from './lib/models/column.model';
+export * from './lib/models/config.model';
