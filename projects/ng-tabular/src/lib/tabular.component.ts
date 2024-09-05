@@ -52,9 +52,6 @@ export class NgTabularComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // if (changes['rows'] || changes['columns']) {
-    //   this.loadData();
-    // }
   }
 
   onSearchChange(searchValue: string) {
@@ -100,9 +97,7 @@ export class NgTabularComponent implements OnInit, OnChanges {
   }
 
   applyFilters(){
-
     this.filteredRows = this.rows.filter(row => {
-      // Búsqueda global
       const globalMatch = Object.values(row).some(value =>
         value
           ?.toString()
@@ -110,7 +105,6 @@ export class NgTabularComponent implements OnInit, OnChanges {
           .includes(this.globalSearchTerm.toLowerCase())
       );
 
-      // Búsqueda específica por columna
       const columnMatch = this.columns.every(column =>
         row[column.field]
           ?.toString()
@@ -118,16 +112,15 @@ export class NgTabularComponent implements OnInit, OnChanges {
           .includes(this.searchTerms[column.field].toLowerCase())
       );
 
-      // Filtrar si coincide con la búsqueda global o con todas las búsquedas por columna
       return globalMatch && columnMatch;
     });
   }
 
   formatData(value: any): any {
     if (typeof(value) === 'boolean') {
-      return value ? '✔️' : '❌'; // Format boolean
+      return value ? 'Yes' : 'No'; // Format boolean
     }
-    return value; // For 'string' and 'number', return as is
+    return value;
   }
 
   previousPage() {

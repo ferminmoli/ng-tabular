@@ -1,7 +1,8 @@
 export interface Config {
   enableSorting?: boolean;
   enableFiltering?: boolean;
-  enableSearchBox?: boolean;
+  enableGlobalSearchBox?: boolean;
+  enableColumnSearchBox?: boolean;
   enablePagination?: boolean;
   pageSizeOptions?: number[];
   defaultPageSize?: number;

@@ -2,7 +2,7 @@
 <div class="overflow-x-auto bg-gray-100 p-4 rounded-lg shadow-md">
   <!-- Search box -->
   <div class="mb-4 flex justify-between items-center">
-    <input *ngIf="config.enableSearchBox" type="text" [(ngModel)]="globalSearchTerm"
+    <input *ngIf="config.enableGlobalSearchBox" type="text" [(ngModel)]="globalSearchTerm"
       (ngModelChange)="onSearchChange(globalSearchTerm)" placeholder="Search..."
       class="border border-gray-300 rounded-md p-2 w-1/3 focus:ring-2 focus:ring-blue-500 outline-none" />
   </div>
@@ -18,12 +18,13 @@
 
           <input
             type="text"
+            *ngIf="config.enableColumnSearchBox"
             [(ngModel)]="searchTerms[column.field]"
             (ngModelChange)="onColumnSearchChange(column.field, searchTerms[column.field])"
-            placeholder="Buscar en {{ column.headerName }}"
-            class="mt-2 border rounded-md p-2 w-full"
+            placeholder="Search by {{ column.headerName }}"
+            class="mt-2 mb-2 border rounded-md p-2 w-full"
           />
-
+          
           <button *ngIf="config.enableSorting" (click)="sort(column.field)"
             class="flex items-center space-x-1 focus:outline-none">
             <span>{{ column.headerName || column.field }}</span>

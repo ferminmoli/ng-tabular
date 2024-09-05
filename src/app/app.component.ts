@@ -16,22 +16,49 @@ export class AppComponent implements OnInit {
   columns: Column[] = [];
   rows: any[] = [];
 
-  tableConfig: Config = {
+  tableConfigPaginationOnly: Config = {
+    enablePagination: true,
+    defaultPageSize: 5
+  };
+
+  tableConfigSortingOnly: Config = {
+    enableSorting: true,
+    enablePagination: true,
+    defaultPageSize: 5
+  };
+
+  tableConfigGlobalFilterOnly: Config = {
+    enableSorting: true,
+    enablePagination: true,
+    enableGlobalSearchBox: true,
+    defaultPageSize: 5
+  };
+
+  tableConfigColumnFilterOnly: Config = {
+    enableSorting: true,
+    enablePagination: true,
+    enableColumnSearchBox: true,
+    defaultPageSize: 5
+  };
+
+  
+  tableConfigAll: Config = {
     enableSorting: true,
     enableFiltering: true,
     enableSearchBox: true,
     enablePagination: true,
-    pageSizeOptions: [10, 20, 50],
-    defaultPageSize: 3
+    enableGlobalSearchBox: true,
+    enableColumnSearchBox: true,
+    defaultPageSize: 5
   };
 
   ngOnInit() {
     this.columns = [
-      { field: "first_name", headerName: "Nombre" },
-      { field: "last_name", headerName: "Apellido" },
+      { field: "first_name", headerName: "Name" },
+      { field: "last_name", headerName: "Last Name" },
       { field: "email", headerName: "Email" },
-      { field: "dob", headerName: "Fecha de Nacimiento"},
-      { field: "available", headerName: "¿Disponible?", dataType: "boolean"} 
+      { field: "dob", headerName: "Date of Birth"},
+      { field: "available", headerName: "Available?", dataType: "boolean"} 
     ];
 
     
